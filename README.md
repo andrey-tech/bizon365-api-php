@@ -47,13 +47,13 @@
 
 Установка через composer:
 ```
-$ composer require andrey-tech/bizon365-api-php:"^2.1"
+$ composer require andrey-tech/bizon365-api-php:"^2.2"
 ```
 
 или добавить
 
 ```
-"andrey-tech/bizon365-api-php": "^2.1"
+"andrey-tech/bizon365-api-php": "^2.2"
 ```
 
 в секцию require файла composer.json.
