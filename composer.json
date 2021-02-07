@@ -1,6 +1,6 @@
 {
     "name": "andrey-tech/bizon365-api-php",
-    "description": "Обертка для работы с API v1 Бизон365 c троттлингом запросов и логированием в файл",
+    "description": "Обертка на PHP7+ для работы с API v1 сервиса Бизон 365 c троттлингом запросов и логированием в файл",
     "keywords": [ "bizon365", "bizon", "api", "api-wrapper", "throttling", "logging" ],
     "homepage": "https://github.com/andrey-tech/bizon365-api-php",
     "minimum-stability": "stable",
@@ -15,8 +15,8 @@
     "require": {
         "php": ">=7.0",
         "ext-json": "*",
-        "andrey-tech/http-client-php": "^2.9",
-        "andrey-tech/debug-logger-php": "^1.8"
+        "andrey-tech/http-client-php": "^3.0",
+        "andrey-tech/debug-logger-php": "^2.0"
     },
     "autoload": {
         "psr-4": {

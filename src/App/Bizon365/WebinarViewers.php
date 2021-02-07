@@ -4,17 +4,18 @@
  * Трейт WebinarViewers. Содержит методы для работы со зрителями вебинаров
  *
  * @author    andrey-tech
- * @copyright 2020 andrey-tech
+ * @copyright 2020-2021 andrey-tech
  * @see https://github.com/andrey-tech/bizon365-api-php
  * @license   MIT
  *
- * @version 1.0.0
+ * @version 1.0.1
  *
  * v1.0.0 (02.08.2020) Начальный релиз
+ * v1.0.1 (07.02.2021) Рефакторинг
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Bizon365;
 
@@ -35,7 +36,7 @@ trait WebinarViewers
         int $limit = 100,
         bool $liveWebinars = true,
         bool $autoWebinars = true
-    ) :array {
+    ): array {
         $response = $this->request(
             'webinars/reports/getlist',
             'GET',
@@ -101,7 +102,7 @@ trait WebinarViewers
      * @throws Bizon365APIException
      * @see https://blog.bizon365.ru/api/v1/webinars/reports/
      */
-    public function getWebinarViewers(string $webinarId, int $skip = 0, int $limit = 1000) :array
+    public function getWebinarViewers(string $webinarId, int $skip = 0, int $limit = 1000): array
     {
         $response = $this->request(
             'webinars/reports/getviewers',
@@ -119,7 +120,7 @@ trait WebinarViewers
 
         if (! empty($response['errors'])) {
             $jsonErrors = $this->toJSON($response['errors']);
-            throw new Bizon365APIException("Ошибки при загрузке списка зрителей вабинара {$webinarId}: {$jsonErrors}");
+            throw new Bizon365APIException("Ошибки при загрузке списка зрителей вебинара {$webinarId}: {$jsonErrors}");
         }
 
         return $response['viewers'];
@@ -134,7 +135,7 @@ trait WebinarViewers
      * @throws Bizon365APIException
      * @see https://blog.bizon365.ru/api/v1/webinars/reports/
      */
-    public function getAllWebinarViewers(string $webinarId, int $skip = 0, int $limit = 1000) :array
+    public function getAllWebinarViewers(string $webinarId, int $skip = 0, int $limit = 1000): array
     {
         $webinarViewers = [];
 

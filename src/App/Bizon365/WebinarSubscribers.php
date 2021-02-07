@@ -4,17 +4,18 @@
  * Трейт WebinarSubscribers. Содержит методы для работы с подписчиками вебинаров
  *
  * @author    andrey-tech
- * @copyright 2020 andrey-tech
+ * @copyright 2020-2021 andrey-tech
  * @see https://github.com/andrey-tech/bizon365-api-php
  * @license   MIT
  *
- * @version 1.0.0
+ * @version 1.0.1
  *
  * v1.0.0 (02.08.2020) Начальный релиз
+ * v1.0.1 (07.02.2021) Рефакторинг
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Bizon365;
 
@@ -31,7 +32,7 @@ trait WebinarSubscribers
     public function getWebinarSubpages(
         int $skip = 0,
         int $limit = 50
-    ) :array {
+    ): array {
         $response = $this->request(
             'webinars/subpages/getSubpages',
             'GET',
@@ -49,7 +50,9 @@ trait WebinarSubscribers
 
         if (! empty($response['errors'])) {
             $jsonErrors = $this->toJSON($response['errors']);
-            throw new Bizon365APIException("Ошибки при загрузке списка страниц регистрации по вабинарам: {$jsonErrors}");
+            throw new Bizon365APIException(
+                "Ошибки при загрузке списка страниц регистрации по вебинарам: {$jsonErrors}"
+            );
         }
 
         return $response['pages'];
@@ -66,7 +69,7 @@ trait WebinarSubscribers
     public function getAllWebinarSubpages(
         int $skip = 0,
         int $limit = 50
-    ) :array {
+    ): array {
         $webinarSubpages = [];
 
         do {
@@ -84,8 +87,10 @@ trait WebinarSubscribers
      * @param string $pageId ID страницы регистрации
      * @param int $skip Пропустить указанное число записей
      * @param int $limit Ограничить количество записей (не более 1000)
-     * @param string $webinarTimeMin Нижняя граница для времени сеанса, на который зарегистрированы подписчики  в формате ISO8601
-     * @param string $webinarTimeMax Верхняя граница для времени сеанса, на который зарегистрированы подписчики  в формате ISO8601
+     * @param string $webinarTimeMin Нижняя граница для времени сеанса, на который зарегистрированы подписчики
+     *                              в формате ISO8601
+     * @param string $webinarTimeMax Верхняя граница для времени сеанса, на который зарегистрированы подписчики
+     *                              в формате ISO8601
      * @param string $registeredTimeMin Нижняя граница для времени регистрации подписчика в формате ISO8601
      * @param string $registeredTimeMax Верхняя граница для времени регистрации подписчика в формате ISO8601
      * @param string $url_marker Значение маркера из URL, идентификатор партнера
@@ -102,7 +107,7 @@ trait WebinarSubscribers
         string $registeredTimeMin = null,
         string $registeredTimeMax = null,
         string $url_marker = null
-    ) :array {
+    ): array {
 
         $params = [ 'pageId' => $pageId, 'skip' => $skip, 'limit' => $limit ];
         $names = [ 'registeredTimeMin', 'registeredTimeMax', 'webinarTimeMin', 'webinarTimeMax', 'url_marker'];
@@ -122,13 +127,15 @@ trait WebinarSubscribers
             $httpCode = $this->http->getHTTPCode();
             $response = $this->http->getResponse();
             throw new Bizon365APIException(
-                "Не удалось загрузить список подписчиков вебинара для страницы {$pageId} (HTTP code {$httpCode}): {$response}"
+                "Не удалось загрузить список подписчиков вебинара для страницы {$pageId} " .
+                "(HTTP code {$httpCode}): {$response}"
             );
         }
 
         if (! empty($response['errors'])) {
             $jsonErrors = $this->toJSON($response['errors']);
-            throw new Bizon365APIException("Ошибки при загрузке списка подписчиков вебинара для страницы {$pageId}: {$jsonErrors}");
+            throw new Bizon365APIException("Ошибки при загрузке списка подписчиков вебинара " .
+                "для страницы {$pageId}: {$jsonErrors}");
         }
 
         return $response['list'];
@@ -139,8 +146,10 @@ trait WebinarSubscribers
      * @param string $pageId ID страницы регистрации
      * @param int $skip Пропустить указанное число записей
      * @param int $limit Количество записей в одном запросе (не более 1000)
-     * @param string $webinarTimeMin Нижняя граница для времени сеанса, на который зарегистрированы подписчики  в формате ISO8601
-     * @param string $webinarTimeMax Верхняя граница для времени сеанса, на который зарегистрированы подписчики  в формате ISO8601
+     * @param string $webinarTimeMin Нижняя граница для времени сеанса, на который зарегистрированы подписчики
+     *                              в формате ISO8601
+     * @param string $webinarTimeMax Верхняя граница для времени сеанса, на который зарегистрированы подписчики
+     *                              в формате ISO8601
      * @param string $registeredTimeMin Нижняя граница для времени регистрации подписчика в формате ISO8601
      * @param string $registeredTimeMax Верхняя граница для времени регистрации подписчика в формате ISO8601
      * @param string $url_marker Значение маркера из URL, идентификатор партнера
@@ -157,8 +166,7 @@ trait WebinarSubscribers
         string $registeredTimeMin = null,
         string $registeredTimeMax = null,
         string $url_marker = null
-    ) :array
-    {
+    ): array {
         $webinarSubscribers = [];
 
         do {

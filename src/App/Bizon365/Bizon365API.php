@@ -4,25 +4,25 @@
  * Обертка для работы с REST API v1 Бизон365 с тротлингом запросов и логированием
  *
  * @author    andrey-tech
- * @copyright 2019-2020 andrey-tech
+ * @copyright 2019-2021 andrey-tech
  * @see https://github.com/andrey-tech/bizon365-api-php
  * @license   MIT
  *
- * @version 2.1.0
+ * @version 2.2.0
  *
  * v1.0.0 (07.10.2019) Начальный релиз
  * v1.1.0 (29.03.2020) Добавлено логирование в файл
  * v2.0.0 (15.06.2020) Изменено название класса и названия методов класса
  * v2.1.0 (02.08.2020) Добавлены трейты WebinarViewers, WebinarSubscribers
+ * v2.2.0 (07.02.2021) Изменения для класса HTTP v3.0; добавлен метод setLogger()
  *
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Bizon365;
 
-use App\AppException;
-use App\HTTP;
+use App\HTTP\HTTP;
 
 class Bizon365API
 {
@@ -30,19 +30,20 @@ class Bizon365API
     use WebinarSubscribers;
 
     /**
-     * URL REST API
+     * Bizon365 REST API URL
+     * @var string
      */
     const URL = 'https://online.bizon365.ru/api/v1/';
 
     /**
-     * Объект класса \App\HTTP
-     * @var object
+     * Объект класса HTTP
+     * @var HTTP
      */
     public $http;
 
     /**
      * Объект класса, выполняющего логирование
-     * @param object
+     * @param \App\DebugLogger\DebugLogger
      */
     public $logger;
 
@@ -62,6 +63,20 @@ class Bizon365API
 
         $this->http = new HTTP();
         $this->http->useCookies = !isset($authToken);
+    }
+
+    /**
+     * Устанавливает объект класса, выполняющего логирование
+     * @param \App\DebugLogger\DebugLoggerInterface $logger
+     */
+    public function setLogger($logger)
+    {
+        if (!($logger instanceof \App\DebugLogger\DebugLoggerInterface)) {
+            throw new Bizon365APIException(
+                "Класс логгера должен реализовывать интерфейс \App\DebugLogger\DebugLoggerInterface"
+            );
+        }
+        $this->logger = $logger;
     }
 
     /**
@@ -120,7 +135,6 @@ class Bizon365API
      * @param array $requestHeaders Заголовки запроса
      * @param array $curlOptions Дополнительные опции для cURL
      * @return array|null
-     * @throws AppException
      */
     protected function request(
         string $path,
@@ -154,9 +168,9 @@ class Bizon365API
      * @param mixed $data Данные для преобразования
      * @return string
      */
-    protected function toJSON($data) :string
+    protected function toJSON($data): string
     {
-        $jsonParams = json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PARTIAL_OUTPUT_ON_ERROR|JSON_PRETTY_PRINT);
+        $jsonParams = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_PRETTY_PRINT);
         if ($jsonParams === false) {
             $jsonParams = print_r($data, true);
         }
